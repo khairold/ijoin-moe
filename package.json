@@ -9,9 +9,21 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@fontsource/dm-sans": "^4.5.0",
+    "@xstate/inspect": "^0.5.0",
+    "@xstate/react": "^1.6.1",
+    "fuse.js": "^6.4.6",
+    "mapbox-gl": "^1.13.1",
+    "maplibre-gl": "^2.0.0-pre.1",
     "next": "11.1.2",
     "react": "17.0.2",
-    "react-dom": "17.0.2"
+    "react-content-loader": "^6.0.3",
+    "react-dom": "17.0.2",
+    "react-feather": "^2.0.9",
+    "react-modal": "^3.14.3",
+    "react-window": "^1.8.6",
+    "theme-ui": "^0.11.2",
+    "xstate": "^4.23.4"
   },
   "devDependencies": {
     "eslint": "7.32.0",
