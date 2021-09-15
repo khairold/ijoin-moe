@@ -186,7 +186,12 @@ function Start() {
           </Box>
         ) : (
           <Box>
-            {!initialState && (
+            {initialState ? (
+              <Box sx={{ py: 3 }}>
+                <Box sx={{ fontSize: [1, 2], color: 'greys.400' }}>Matching unifi addresses will be listed below for</Box>
+                <Box sx={{ fontSize: 0, color: 'greys.300' }}>THE ADDRESS THAT YOU WILL BE SELECTING ON THE MAP</Box>
+              </Box>
+            ) : (
               <Box>
                 <Box sx={{ py: 3 }}>
                   <Box sx={{ fontSize: [1, 2], color: 'greys.400' }}>{invetoryResults.length} matching unifi addresses found for</Box>
