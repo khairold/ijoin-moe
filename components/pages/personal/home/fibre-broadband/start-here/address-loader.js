@@ -35,6 +35,7 @@ export default function AddressLoader({ validated, setValidated }) {
             px: 3,
             pb: 9,
             flexDirection: 'column',
+            alignItems: 'center',
             zIndex: 3,
           }}
         >
@@ -46,16 +47,19 @@ export default function AddressLoader({ validated, setValidated }) {
               borderWidth: 1,
               p: 5,
               bg: 'white',
+              width: [300],
             }}
           >
-            <Box sx={{ pb: 6, fontSize: 3 }}>Validate your phone number to reveal unifi addresses:</Box>
+            <Box sx={{ pb: 5, fontSize: 3, color: 'greys.800' }}>Validate your phone number to reveal unifi addresses:</Box>
             <Box>
               <Flex sx={{ alignItems: 'baseline' }}>
                 <Box sx={{ pr: 2 }}>+60</Box>
                 <Input sx={{ borderColor: 'greys.200' }} />
               </Flex>
-              <Box sx={{ textAlign: 'right', pt: 4 }}>
-                <Button onClick={() => setValidated(true)}>Request TAC</Button>
+              <Box sx={{ textAlign: 'right', pt: [4, 6] }}>
+                <Button sx={{ px: [3, 4], py: [2, 3] }} onClick={() => setValidated(true)}>
+                  Request TAC
+                </Button>
               </Box>
             </Box>
           </Box>

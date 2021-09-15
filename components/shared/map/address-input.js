@@ -80,7 +80,7 @@ export default function AddressInput({ setLng, setLat }) {
           onKeyDown={handleKeyDown}
           onChange={handleInputChange}
           value={inputValue}
-          placeholder="You can search here to zoom in to your area"
+          placeholder="Search here to zoom in to your area"
           onFocus={() => setInputFocus(true)}
           onBlur={() => setTimeout(() => setInputFocus(false))}
           sx={{

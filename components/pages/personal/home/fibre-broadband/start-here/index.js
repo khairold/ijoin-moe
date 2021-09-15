@@ -1,37 +1,19 @@
 /** @jsxImportSource theme-ui */
-import { useState, useEffect, useRef } from 'react'
-import { Box, Flex, Heading, Input, Container, Text } from 'theme-ui'
+import { useState, useEffect } from 'react'
+import { Box, Heading, Container, Input } from 'theme-ui'
 import dynamic from 'next/dynamic'
 import Fuse from 'fuse.js'
-import { Filter } from 'react-feather'
 
+import PaginatedSearchResults from './paginated-search-results'
+import FilterAddress from './filter-address'
 import AddressLoader from './address-loader'
+
+import { getParams } from '@/utils/index'
 
 const Map = dynamic(() => import('@/components/shared/map'), { ssr: false })
 
-function useDebounce(value, delay) {
-  // State and setters for debounced value
-  const [debouncedValue, setDebouncedValue] = useState(value)
-  useEffect(
-    () => {
-      // Update debounced value after delay
-      const handler = setTimeout(() => {
-        setDebouncedValue(value)
-      }, delay)
-      // Cancel the timeout if value changes (also on delay change or unmount)
-      // This is how we prevent debounced value from updating if value is changed ...
-      // .. within the delay period. Timeout gets cleared and restarted.
-      return () => {
-        clearTimeout(handler)
-      }
-    },
-    [value, delay] // Only re-call effect if value or delay changes
-  )
-  return debouncedValue
-}
-
 function Start() {
-  const [validated, setValidated] = useState(true)
+  const [validated, setValidated] = useState(false)
 
   const [smartMapInstallationAddress, setSmartMapInstallationAddress] = useState({})
   const [smartMapMergedAddress, setSmartMapMergedAddress] = useState([])
@@ -45,12 +27,12 @@ function Start() {
   const [searching, setSearching] = useState(false)
   const [initialState, setInitialState] = useState(true)
 
-  const debouncedUnitFilter = useDebounce(unitFilter, 1000)
-
+  // De-initialized
   useEffect(() => {
     searching && setInitialState(false)
   }, [searching])
 
+  // Merge Address
   useEffect(async () => {
     if (!smartMapInstallationAddress.Location) return
     if (!validated) return
@@ -81,6 +63,7 @@ function Start() {
     setSmartMapMergedAddress(mergedAddressesArr)
   }, [smartMapInstallationAddress, validated])
 
+  // Reset Filter & Run Search Fuzy
   useEffect(() => {
     setUnitFilter('')
     setBuildingFilter('')
@@ -88,11 +71,13 @@ function Start() {
     searchFuzySolr()
   }, [smartMapMergedAddress])
 
+  // Reset Search & Run Filter
   useEffect(() => {
     setInventoryResultsFiltered(invetoryResults)
     setSearching(false)
   }, [invetoryResults])
 
+  // Filter
   useEffect(() => {
     const filtered = invetoryResults
       .filter(({ item }) => (buildingFilter ? item.building === buildingFilter : true))
@@ -118,6 +103,7 @@ function Start() {
     setInventoryResultsFiltered(finalFiltered)
   }, [buildingFilter, streetFilter, unitFilter])
 
+  // Search Fuzy
   function searchFuzySolr() {
     const sArr = (smartMapInstallationAddress.Building || '').split(' ')
 
@@ -180,6 +166,10 @@ function Start() {
             : 'Scroll down and click on unifi address that best matches yours'}
         </Heading>
 
+        {/* <Box>
+          <Input />
+        </Box> */}
+
         {searching ? (
           <Box sx={{ pt: 5 }}>
             <AddressLoader validated={validated} setValidated={setValidated} />
@@ -189,7 +179,10 @@ function Start() {
             {initialState ? (
               <Box sx={{ py: 3 }}>
                 <Box sx={{ fontSize: [1, 2], color: 'greys.400' }}>Matching unifi addresses will be listed below for</Box>
-                <Box sx={{ fontSize: 0, color: 'greys.300' }}>THE ADDRESS THAT YOU WILL BE SELECTING ON THE MAP</Box>
+                <Box sx={{ fontSize: 0, color: 'greys.300' }}>
+                  THE ADDRESS THAT YOU WILL BE SELECTING ON THE MAP
+                  <br /> ZOOM IN UNTIL YOU CAN SEE YOU HOUSE UNIT NUMBER OR BUILDING BLOCK ON THE MAP
+                </Box>
               </Box>
             ) : (
               <Box>
@@ -197,13 +190,16 @@ function Start() {
                   <Box sx={{ fontSize: [1, 2], color: 'greys.400' }}>{invetoryResults.length} matching unifi addresses found for</Box>
                   <Box sx={{ fontSize: 0, color: 'greys.300' }}>{smartMapInstallationAddress.FormattedAddress}</Box>
                 </Box>
-                <FilterAddress
-                  invetoryResults={invetoryResults}
-                  unitFilter={unitFilter}
-                  setUnitFilter={setUnitFilter}
-                  setBuildingFilter={setBuildingFilter}
-                  setStreetFilter={setStreetFilter}
-                />
+                {invetoryResults.length >= 10 && (
+                  <FilterAddress
+                    invetoryResults={invetoryResults}
+                    unitFilter={unitFilter}
+                    setUnitFilter={setUnitFilter}
+                    setBuildingFilter={setBuildingFilter}
+                    setStreetFilter={setStreetFilter}
+                  />
+                )}
+
                 {invetoryResultsFiltered.map(({ item }) => (
                   <PaginatedSearchResults key={item.id} item={item} />
                 ))}
@@ -217,225 +213,3 @@ function Start() {
 }
 
 export default Start
-
-function FilterAddress({ invetoryResults, setUnitFilter, setBuildingFilter, setStreetFilter }) {
-  const [show, setShow] = useState(false)
-  const [searchTerm, setSearchTerm] = useState('')
-  const debouncedSearchTerm = useDebounce(searchTerm, 500)
-
-  useEffect(() => {
-    setUnitFilter(debouncedSearchTerm)
-  }, [debouncedSearchTerm])
-  return (
-    <Flex
-      sx={{
-        position: 'sticky',
-        top: 0,
-        alignItems: 'baseline',
-        mt: 2,
-        mb: 3,
-        fontSize: 1,
-        color: 'greys.400',
-        flexDirection: ['row', 'column'],
-        borderStyle: 'solid',
-        borderColor: 'backgroundGrey',
-        boxShadow: show && '0 4px 6px hsla(0, 0%, 0%, 0.1)',
-        borderRadius: 8,
-        borderWidth: 1,
-        pt: 2,
-        pb: show ? 4 : 0,
-        px: 4,
-        bg: 'white',
-      }}
-    >
-      {!show ? (
-        <Flex onClick={() => setShow(true)} sx={{ cursor: 'pointer', pb: show ? 3 : 2, width: '100%' }}>
-          <Filter sx={{ color: 'greys.400', size: [14, 16] }} /> <Text sx={{ color: 'greys.400', fontSize: [0, 1], pl: 1 }}>Filter</Text>
-        </Flex>
-      ) : (
-        <Box>
-          <Flex sx={{ flexDirection: ['column', 'row'], alignItems: 'baseline' }}>
-            <Flex sx={{ alignItems: 'baseline' }}>
-              <Box sx={{ pr: 3 }}>Unit: </Box>
-              <Input
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                sx={{
-                  width: [70],
-                  ':focus': { outline: 'none' },
-                  pb: 0,
-                  px: 1,
-                  fontSize: 1,
-                  borderColor: 'greys.200',
-                  color: 'greys.400',
-                  borderLeft: 'none',
-                  borderTop: 'none',
-                  borderRight: 'none',
-                }}
-              />
-            </Flex>
-            <Option invetoryResults={invetoryResults} field="building" setFilter={setBuildingFilter} />
-            <Option invetoryResults={invetoryResults} field="street" setFilter={setStreetFilter} />
-          </Flex>
-        </Box>
-      )}
-    </Flex>
-  )
-}
-
-// function FilterAddress({ invetoryResults, unitFilter, setUnitFilter, setBuildingFilter, setStreetFilter }) {
-//   const [show, setShow] = useState(false)
-//   const [searchTerm, setSearchTerm] = useState('')
-//   const debouncedSearchTerm = useDebounce(searchTerm, 500)
-
-//   useEffect(() => {
-//     setUnitFilter(debouncedSearchTerm)
-//   }, [debouncedSearchTerm])
-
-//   return (
-//     <Flex
-//       sx={{
-//         zIndex: 100,
-//         positon: 'sticky',
-//         top: 0,
-//         alignItems: 'baseline',
-//         mt: 2,
-//         mb: 3,
-//         fontSize: 1,
-//         color: 'greys.400',
-//         flexDirection: ['row', 'column'],
-//         borderStyle: 'solid',
-//         borderColor: 'backgroundGrey',
-//         boxShadow: show && '0 4px 6px hsla(0, 0%, 0%, 0.1)',
-//         borderRadius: 8,
-//         borderWidth: 1,
-//         pt: 2,
-//         pb: show ? 4 : 0,
-//         px: 4,
-//       }}
-//     >
-//       {/* <Flex sx={{ justifyContent: 'space-between', pb: show ? 4 : 2 }}> */}
-
-//       {/* <Box sx={{ color: 'oranges.400', fontSize: 0 }}>Still can't find your address?</Box> */}
-//       {/* </Flex> */}
-//       {!show ? (
-//         <Flex onClick={() => setShow(true)} sx={{ cursor: 'pointer', pb: show ? 3 : 2, width: '100%' }}>
-//           <Filter sx={{ color: 'greys.400', size: [14, 16] }} /> <Text sx={{ color: 'greys.400', fontSize: [0, 1], pl: 1 }}>Filter</Text>
-//         </Flex>
-//       ) : (
-//         <Box>
-//           <Flex sx={{ flexDirection: ['column', 'row'], alignItems: 'baseline' }}>
-//             <Flex sx={{ alignItems: 'baseline' }}>
-//               <Box sx={{ pr: 3 }}>Unit: </Box>
-//               <Input
-//                 // value={unitFilter}
-//                 // onChange={(e) => setUnitFilter(e.target.value)}
-//                 value={searchTerm}
-//                 onChange={(e) => setSearchTerm(e.target.value)}
-//                 sx={{
-//                   width: [70],
-//                   ':focus': { outline: 'none' },
-//                   pb: 0,
-//                   px: 1,
-//                   fontSize: 1,
-//                   borderColor: 'greys.200',
-//                   color: 'greys.400',
-//                   borderLeft: 'none',
-//                   borderTop: 'none',
-//                   borderRight: 'none',
-//                 }}
-//               />
-//             </Flex>
-//             <Option invetoryResults={invetoryResults} field="building" setFilter={setBuildingFilter} />
-//             <Option invetoryResults={invetoryResults} field="street" setFilter={setStreetFilter} />
-//           </Flex>
-//         </Box>
-//       )}
-//     </Flex>
-//   )
-// }
-
-function Option({ invetoryResults = [], field, setFilter }) {
-  let optionObj = {}
-  invetoryResults.forEach(({ item }) => {
-    if (item[field]) {
-      optionObj[item[field]] = item[field]
-    }
-  })
-  const options = Object.values(optionObj).sort()
-
-  if (options.length < 1) return <></>
-
-  return (
-    <Flex sx={{ alignItems: 'baseline', pt: [2, 0], pl: [0, 5] }}>
-      <Box sx={{ pr: 1, textTransform: 'capitalize' }}>{field}: </Box>
-      <select
-        onChange={(e) => setFilter(e.target.value)}
-        sx={{
-          // flex: 7,
-          // width: ['80%', null],
-          // width: '100%',
-          // textAlign: 'right',
-          // overflow: 'hidden',
-          bg: 'white',
-          borderColor: 'greys.200',
-          color: 'greys.400',
-          borderLeft: 'none',
-          borderTop: 'none',
-          borderRight: 'none',
-          ':focus': { outline: 'none' },
-          width: 200,
-        }}
-      >
-        <option value="">All</option>
-        {options.map((o) => (
-          <option key={o} value={o} sx={{ width: 200, wordWrap: 'break-word' }}>
-            {o}
-          </option>
-        ))}
-      </select>
-    </Flex>
-  )
-}
-
-function getParams(locationObj) {
-  return Object.entries(locationObj)
-    .map(([key, val]) => `${key}=${encodeURIComponent(val)}`)
-    .join('&')
-}
-
-function PaginatedSearchResults({ item }) {
-  return (
-    <Box sx={{ bg: 'white', py: 5 }}>
-      <Box
-        sx={{
-          borderBottomStyle: 'solid',
-          borderWidth: 2,
-          borderColor: 'white',
-          display: 'inline-block',
-          color: 'blue',
-          cursor: 'pointer',
-          ':hover': { borderColor: 'blue' },
-          lineHeight: 1,
-          mb: 1,
-        }}
-      >
-        <Box sx={{ fontSize: [4, 5, 6], display: ['block', 'inline-block'], fontWeight: 700 }}>{item.unit}</Box>{' '}
-        <Box sx={{ pt: [1, 0], fontSize: [2, 3, 4], display: ['block', 'inline-block'] }}>{item.building ? item.building : item.street}</Box>
-      </Box>
-
-      <Box sx={{ color: 'greys.600', fontSize: 1 }}>
-        {item.building ? (
-          <Text>
-            {item.street} {item.section}, {item.city} {item.postcode}, {item.state}
-          </Text>
-        ) : (
-          <Text>
-            {item.section}
-            {item.section && ','} {item.city} {item.postcode}, {item.state}
-          </Text>
-        )}
-      </Box>
-    </Box>
-  )
-}

@@ -28,7 +28,6 @@ function Map({ setSmartMapInstallationAddress, setSearching }) {
     if (map.current) return
 
     const marker = new mapboxgl.Marker(unifiMarker(), { draggable: true })
-    // const marker = new mapboxgl.Marker({ draggable: true })
 
     map.current = new mapboxgl.Map({
       container: mapRef.current,
@@ -54,7 +53,7 @@ function Map({ setSmartMapInstallationAddress, setSearching }) {
         enableHighAccuracy: true,
       },
       trackUserLocation: true,
-      // showUserLocation: false,
+      showUserLocation: false,
       fitBoundsOptions: {
         maxZoom: zoom,
       },
