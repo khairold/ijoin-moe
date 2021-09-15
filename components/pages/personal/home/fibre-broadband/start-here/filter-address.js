@@ -18,7 +18,7 @@ export default function FilterAddress({ invetoryResults, setUnitFilter, setBuild
         top: 0,
         alignItems: 'baseline',
         mt: 2,
-        mb: 3,
+        mb: [2, 3],
         fontSize: 1,
         color: 'greys.400',
         flexDirection: ['row', 'column'],
@@ -38,7 +38,7 @@ export default function FilterAddress({ invetoryResults, setUnitFilter, setBuild
     >
       {!show ? (
         <Flex onClick={() => setShow(true)} sx={{ cursor: 'pointer', pb: show ? 3 : 2, width: '100%' }}>
-          <Filter sx={{ color: 'greys.400', size: [14, 16] }} /> <Text sx={{ color: 'greys.400', fontSize: [0, 1], pl: 1 }}>Filter</Text>
+          <Filter sx={{ color: 'greys.500', size: [14, 16] }} /> <Text sx={{ color: 'greys.500', fontSize: [0, 1], pl: 1 }}>Filter</Text>
         </Flex>
       ) : (
         <Box>
@@ -55,7 +55,7 @@ export default function FilterAddress({ invetoryResults, setUnitFilter, setBuild
                   px: 1,
                   fontSize: 1,
                   borderColor: 'greys.200',
-                  color: 'greys.400',
+                  color: 'greys.500',
                   borderLeft: 'none',
                   borderTop: 'none',
                   borderRight: 'none',
@@ -95,7 +95,7 @@ function Option({ invetoryResults = [], field, setFilter }) {
           // overflow: 'hidden',
           bg: 'white',
           borderColor: 'greys.200',
-          color: 'greys.400',
+          color: 'greys.500',
           borderLeft: 'none',
           borderTop: 'none',
           borderRight: 'none',

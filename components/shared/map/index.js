@@ -106,10 +106,10 @@ function Map({ setSmartMapInstallationAddress, setSearching }) {
   }
 
   return (
-    <Box sx={{ position: 'relative', width: '100%', height: ['90vw', 400], mx: 'auto' }}>
+    <Box sx={{ position: 'relative', width: '100%', height: ['80vw', 400], mx: 'auto' }}>
       <AddressInput setLng={setLng} setLat={setLat} />
       <PlanInfo speed="300" price="189" />
-      <Box ref={mapRef} sx={{ width: '100%', height: ['90vw', 400] }} />
+      <Box ref={mapRef} sx={{ width: '100%', height: ['80vw', 400] }} />
     </Box>
   )
 }

@@ -156,7 +156,7 @@ function Start() {
     <Box>
       <Map setSmartMapInstallationAddress={setSmartMapInstallationAddress} setSearching={setSearching} />
       <Container sx={{ p: 3 }}>
-        <Heading sx={{ pt: 4, fontSize: 3, fontWeight: 700 }}>
+        <Heading sx={{ pt: [3, 4], fontSize: 3, fontWeight: 700 }}>
           {initialState
             ? 'Click on the map and put the marker exactly on top of your address location'
             : searching
@@ -178,8 +178,8 @@ function Start() {
           <Box>
             {initialState ? (
               <Box sx={{ py: 3 }}>
-                <Box sx={{ fontSize: [1, 2], color: 'greys.400' }}>Matching unifi addresses will be listed below for</Box>
-                <Box sx={{ fontSize: 0, color: 'greys.300' }}>
+                <Box sx={{ fontSize: [1, 2], color: 'greys.600' }}>Matching unifi addresses will be listed below for</Box>
+                <Box sx={{ fontSize: 0, color: 'greys.500' }}>
                   THE ADDRESS THAT YOU WILL BE SELECTING ON THE MAP
                   <br /> ZOOM IN UNTIL YOU CAN SEE YOU HOUSE UNIT NUMBER OR BUILDING BLOCK ON THE MAP
                 </Box>
@@ -187,8 +187,8 @@ function Start() {
             ) : (
               <Box>
                 <Box sx={{ py: 3 }}>
-                  <Box sx={{ fontSize: [1, 2], color: 'greys.400' }}>{invetoryResults.length} matching unifi addresses found for</Box>
-                  <Box sx={{ fontSize: 0, color: 'greys.300' }}>{smartMapInstallationAddress.FormattedAddress}</Box>
+                  <Box sx={{ fontSize: [1, 2], color: 'greys.600' }}>{invetoryResults.length} matching unifi addresses found for</Box>
+                  <Box sx={{ fontSize: 0, color: 'greys.500' }}>{smartMapInstallationAddress.FormattedAddress}</Box>
                 </Box>
                 {invetoryResults.length >= 10 && (
                   <FilterAddress
