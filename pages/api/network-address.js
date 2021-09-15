@@ -1,6 +1,7 @@
 import { fetchBackend, buildPath, responseFromFetch } from '@/utils/backend'
 
 const coordinatesAddressSearchUrl = '/network-address'
+// const coordinatesAddressSearchUrl = '/myunifi/coverage/v1/pre/ijoin/coordinates/address'
 
 export default async function handler(req, res) {
   if (Object.prototype.hasOwnProperty.call(req.query, 'coordinate')) {

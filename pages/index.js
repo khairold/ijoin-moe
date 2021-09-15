@@ -1,6 +1,5 @@
-import Head from 'next/head'
-import Image from 'next/image'
+import Start from '@/components/pages/personal/home/fibre-broadband/start-here'
 
 export default function Home() {
-  return <div>Index</div>
+  return <Start />
 }
