@@ -17,8 +17,8 @@ export default function FilterAddress({ invetoryResults, setUnitFilter, setBuild
         position: 'sticky',
         top: 0,
         alignItems: 'baseline',
-        mt: 2,
-        mb: [2, 3],
+        // mt: 2,
+        mb: [show ? 5 : 2, 3],
         fontSize: 1,
         color: 'greys.400',
         flexDirection: ['row', 'column'],
@@ -37,7 +37,7 @@ export default function FilterAddress({ invetoryResults, setUnitFilter, setBuild
       }}
     >
       {!show ? (
-        <Flex onClick={() => setShow(true)} sx={{ cursor: 'pointer', pb: show ? 3 : 2, width: '100%' }}>
+        <Flex onClick={() => setShow(true)} sx={{ cursor: 'pointer', pb: show ? 3 : 2, width: '100%', justifyContent: 'flex-end' }}>
           <Filter sx={{ color: 'greys.500', size: [14, 16] }} /> <Text sx={{ color: 'greys.500', fontSize: [0, 1], pl: 1 }}>Filter</Text>
         </Flex>
       ) : (

@@ -1,6 +1,6 @@
 /** @jsxImportSource theme-ui */
 import { useState, useEffect, useRef } from 'react'
-import { Box, Flex, Input, Button, Container } from 'theme-ui'
+import { Box } from 'theme-ui'
 
 import PlanInfo from './plan-info'
 import AddressInput from './address-input'
@@ -16,11 +16,13 @@ const fetcher = (...args) => fetch(...args).then((res) => res.json())
 function Map({ setSmartMapInstallationAddress, setSearching }) {
   const map = useRef(null)
   const mapRef = useRef(null)
-  // const [lng, setLng] = useState(101.66582308248029)
-  // const [lat, setLat] = useState(3.1163757960642897)
-  const [lng, setLng] = useState(101.7746047254445)
-  const [lat, setLat] = useState(3.1569107066875746)
+  const [lng, setLng] = useState(101.66582308248029)
+  const [lat, setLat] = useState(3.1163757960642897)
+  // const [lng, setLng] = useState(101.7746047254445)
+  // const [lat, setLat] = useState(3.1569107066875746)
   const [zoom, setZoom] = useState(17)
+
+  const [initial, setInitial] = useState(false)
 
   const size = useWindowSize()
 
@@ -60,7 +62,7 @@ function Map({ setSmartMapInstallationAddress, setSearching }) {
     })
 
     map.current.addControl(geolocate, 'top-right').on('load', () => {
-      // geolocate.trigger()
+      geolocate.trigger()
     })
 
     const nav = new mapboxgl.NavigationControl({ showCompass: false })
@@ -74,6 +76,8 @@ function Map({ setSmartMapInstallationAddress, setSearching }) {
       marker.remove()
       marker.setLngLat(e.lngLat).addTo(map.current)
       setAddressByReverse({ lat: e.lngLat.lat, lng: e.lngLat.lng })
+      // setInitial(false)
+      // map.current.resize()
     })
   }, [])
 
@@ -106,10 +110,10 @@ function Map({ setSmartMapInstallationAddress, setSearching }) {
   }
 
   return (
-    <Box sx={{ position: 'relative', width: '100%', height: ['80vw', 400], mx: 'auto' }}>
+    <Box sx={{ position: 'relative', width: '100%', height: [initial ? '120vw' : '80vw', 400], mx: 'auto' }}>
       <AddressInput setLng={setLng} setLat={setLat} />
       <PlanInfo speed="300" price="189" />
-      <Box ref={mapRef} sx={{ width: '100%', height: ['80vw', 400] }} />
+      <Box ref={mapRef} sx={{ width: '100%', height: [initial ? '120vw' : '80vw', 400] }} />
     </Box>
   )
 }

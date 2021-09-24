@@ -13,7 +13,7 @@ import { getParams } from '@/utils/index'
 const Map = dynamic(() => import('@/components/shared/map'), { ssr: false })
 
 function Start() {
-  const [validated, setValidated] = useState(false)
+  const [validated, setValidated] = useState(true)
 
   const [smartMapInstallationAddress, setSmartMapInstallationAddress] = useState({})
   const [smartMapMergedAddress, setSmartMapMergedAddress] = useState([])
@@ -30,6 +30,9 @@ function Start() {
   // De-initialized
   useEffect(() => {
     searching && setInitialState(false)
+    // setSmartMapMergedAddress([])
+    // setInventoryResults([])
+    // setInventoryResultsFiltered([])
   }, [searching])
 
   // Merge Address
@@ -105,6 +108,7 @@ function Start() {
 
   // Search Fuzy
   function searchFuzySolr() {
+    setInventoryResultsFiltered([])
     const sArr = (smartMapInstallationAddress.Building || '').split(' ')
 
     let iArr = -1

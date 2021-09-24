@@ -4,7 +4,7 @@ import { Box, Text } from 'theme-ui'
 
 export default function PaginatedSearchResults({ item }) {
   return (
-    <Box sx={{ bg: 'white', py: 5 }}>
+    <Box sx={{ bg: 'white', pb: 8 }}>
       <Box
         sx={{
           borderBottomStyle: 'solid',

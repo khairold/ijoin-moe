@@ -19,9 +19,9 @@ export default function PlanInfo({ speed, price }) {
           display: 'inline-block',
         }}
       >
-        <Box sx={{ pb: [1, 3] }}>
+        {/* <Box sx={{ pb: [1, 3] }}>
           <img src="/images/unifi-logo-grey.svg" alt="unifi" sx={{ height: [16, 20] }} />
-        </Box>
+        </Box> */}
 
         <Box sx={{ fontSize: [1, 2], fontWeight: 700 }}>unifi {speed}Mbps</Box>
         <Box sx={{ fontSize: 0, color: '#C6D4E3' }}>RM{price} / Month</Box>

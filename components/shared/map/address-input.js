@@ -82,7 +82,7 @@ export default function AddressInput({ setLng, setLat }) {
           value={inputValue}
           placeholder="Search here to zoom in to your area"
           onFocus={() => setInputFocus(true)}
-          onBlur={() => setTimeout(() => setInputFocus(false))}
+          onBlur={() => setTimeout(() => setInputFocus(false), 300)}
           sx={{
             width: '100%',
             color: 'greys.600',
@@ -114,9 +114,10 @@ export default function AddressInput({ setLng, setLat }) {
       >
         {autocompleteText.map((address, i) => (
           <li
-            sx={{ py: 2, px: 2, bg: listSelect === i ? 'oranges.100' : 'white' }}
+            sx={{ py: 2, px: 2, bg: listSelect === i ? 'oranges.100' : 'white', cursor: 'pointer' }}
             key={address}
             onClick={() => {
+              console.log('clicked ' + address + ' this')
               setInputValue(address)
               setInputFocus(false)
               setMapAddress(address)

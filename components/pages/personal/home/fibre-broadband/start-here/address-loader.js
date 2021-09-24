@@ -5,10 +5,15 @@ import ContentLoader from 'react-content-loader'
 import useWindowSize from '@/utils/hooks/use-window-size'
 
 export default function AddressLoader({ validated, setValidated }) {
+  const [internalValidated, setInternalValidated] = useState(validated)
   const [showPayWall, setShowPayWall] = useState(false)
   const size = useWindowSize()
+
   useEffect(() => {
-    if (validated) return
+    if (internalValidated) {
+      setShowPayWall(false)
+      return
+    }
     let payWallTimer = setTimeout(() => setShowPayWall(true), 1500)
     return () => {
       clearTimeout(payWallTimer)
@@ -57,7 +62,13 @@ export default function AddressLoader({ validated, setValidated }) {
                 <Input sx={{ borderColor: 'greys.200' }} />
               </Flex>
               <Box sx={{ textAlign: 'right', pt: [4, 6] }}>
-                <Button sx={{ px: [3, 4], py: [2, 3] }} onClick={() => setValidated(true)}>
+                <Button
+                  sx={{ px: [3, 4], py: [2, 3], cursor: 'pointer' }}
+                  onClick={() => {
+                    setInternalValidated(true)
+                    setValidated(true)
+                  }}
+                >
                   Request TAC
                 </Button>
               </Box>
